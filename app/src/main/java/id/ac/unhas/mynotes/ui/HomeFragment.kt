@@ -6,11 +6,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.Navigation
+import androidx.recyclerview.widget.StaggeredGridLayoutManager
 
 import id.ac.unhas.mynotes.R
+import id.ac.unhas.mynotes.db.NoteDatabase
 import kotlinx.android.synthetic.main.fragment_home.*
+import kotlinx.coroutines.launch
 
-class HomeFragment : Fragment() {
+class HomeFragment : BaseFragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -22,6 +25,14 @@ class HomeFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        rv_notes.setHasFixedSize(true)
+        rv_notes.layoutManager = StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL)
+        launch {
+            context?.let {
+                val notes = NoteDatabase(it).getNoteDao().getAllNotes()
+                rv_notes.adapter = NotesAdapter(notes)
+            }
+        }
 
         button_add.setOnClickListener{
             val action = HomeFragmentDirections.actionAddNote()
