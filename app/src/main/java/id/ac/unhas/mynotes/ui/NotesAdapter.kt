@@ -3,6 +3,7 @@ package id.ac.unhas.mynotes.ui
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
 import id.ac.unhas.mynotes.R
 import id.ac.unhas.mynotes.db.Note
@@ -22,6 +23,12 @@ class NotesAdapter(val notes: List<Note>) : RecyclerView.Adapter<NotesAdapter.No
     override fun onBindViewHolder(holder: NoteViewHolder, position: Int) {
         holder.view.tv_title.text = notes[position].title
         holder.view.tv_note.text = notes[position].note
+
+        holder.view.setOnClickListener {
+            val action = HomeFragmentDirections.actionAddNote()
+            action.note = notes[position]
+            Navigation.findNavController(it).navigate(action)
+        }
     }
 
     class NoteViewHolder(val view: View) : RecyclerView.ViewHolder(view)
